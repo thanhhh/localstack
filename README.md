@@ -159,6 +159,14 @@ You can pass the following environment variables to LocalStack:
       volume (potentially faster). This requires to have the Docker client and the Docker
       host on the same machine.
 * `LAMBDA_DOCKER_NETWORK` Specifies the docker network for the container running your lambda function.
+* `LAMBDA_DOCKER_OPTIONS`:
+    - Specifies custom options to be passed to the docker engine as part of the docker run or docker create command.
+
+      For example, to log lambda function output to a syslog server listening on the local host at port 5601, you can set `LAMBDA_DOCKER_OPTIONS` to:
+        ```
+        --log-driver=syslog --log-opt=tag=lambda.$LAMBDA_FUNCTION_NAME --log-opt=syslog-address=tcp://127.0.0.1:5601
+        ```
+
 * `DATA_DIR`: Local directory for saving persistent data (currently only supported for these services:
   Kinesis, DynamoDB, Elasticsearch, S3). Set it to `/tmp/localstack/data` to enable persistence
   (`/tmp/localstack` is mounted into the Docker container), leave blank to disable
