@@ -45,6 +45,7 @@ any longer.
 * **CloudFormation** at http://localhost:4581
 * **CloudWatch** at http://localhost:4582
 * **SSM** at http://localhost:4583
+* **SecretsManager** at http://localhost:4584
 
 
 Additionally, *LocalStack* provides a powerful set of tools to interact with the cloud services, including
@@ -62,12 +63,6 @@ missing functionality on top of them:
 * **Error injection:** *LocalStack* allows to inject errors frequently occurring in real Cloud environments,
   for instance `ProvisionedThroughputExceededException` which is thrown by Kinesis or DynamoDB if the amount of
   read/write throughput is exceeded.
-* **Actual HTTP REST services**: All services in *LocalStack* allow actual HTTP connections on a TCP port. In contrast,
-  moto uses boto client proxies that are injected into all methods annotated with `@mock_sqs`. These client proxies
-  do not perform an actual REST call, but rather call a local mock service method that lives in the same process as
-  the test code.
-* **Language agnostic**: Although *LocalStack* is written in Python, it works well with arbitrary programming
-  languages and environments, due to the fact that we are using the actual REST APIs via HTTP.
 * **Isolated processes**: All services in *LocalStack* run in separate processes. The overhead of additional
   processes is negligible, and the entire stack can easily be executed on any developer machine and CI server.
   In moto, components are often hard-wired in RAM (e.g., when forwarding a message on an SNS topic to an SQS queue,
@@ -117,7 +112,7 @@ localstack start --docker
 (Note that on MacOS you may have to run `TMPDIR=/private$TMPDIR localstack start --docker` if
 `$TMPDIR` contains a symbolic link that cannot be mounted by Docker.)
 
-Or using docker-compose (you need to clone the repository first):
+Or using docker-compose (you need to clone the repository first, currently supports docker-compose version 2):
 
 ```
 docker-compose up
@@ -300,7 +295,7 @@ Simply add the following dependency to your `pom.xml` file:
 <dependency>
     <groupId>cloud.localstack</groupId>
     <artifactId>localstack-utils</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
 </dependency>
 ```
 
@@ -333,6 +328,8 @@ with the `--user` flag: `pip install --user localstack`
 * For troubleshooting localstack start issues, you can check debug logs by running `DEBUG=1 localstack start`
 
 * In case you get errors related to node/nodejs, you may find (this issue comment: https://github.com/localstack/localstack/issues/227#issuecomment-319938530) helpful.
+
+* If you are using AWS Java libraries and need to disable SSL certificate checking, add `-Dcom.amazonaws.sdk.disableCertChecking` to the java invocation.
 
 ## Developing
 
